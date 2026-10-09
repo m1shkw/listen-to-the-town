@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Listen to the town</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://unpkg.com/tone@15.1.22/build/Tone.js"></script>
+    <script src="script.js"></script>
+  </head>
+
+  <body>
+    <main class="Scene" id="scene">
+      <div class="Sky" id="sky"></div>
+      <div class="Moon" id="moon"></div>
+      <div class="City" id="city"></div>
+
+      <div class="Fog">
+        <div class="FogCloud" id="fogCloud"></div>
+        <div class="FogController" id="fogController"></div>
+      </div>
+
+      <p class="Title">listen to the town</p>
+
+      <div class="Instruction">
+        <div class="InstructionRow">
+          <p class="InstructionObject">небо</p>
+          <p class="InstructionAction">click</p>
+          <p class="InstructionResult">звон капли</p>
+        </div>
+        <div class="InstructionRow">
+          <p class="InstructionObject">окна</p>
+          <p class="InstructionAction">click</p>
+          <p class="InstructionResult">нота в мелодии</p>
+        </div>
+        <div class="InstructionRow">
+          <p class="InstructionObject">луна</p>
+          <p class="InstructionAction">
+            drag <img src="images/arrow.svg" alt="" />
+          </p>
+          <p class="InstructionResult">громкость гула</p>
+        </div>
+        <div class="InstructionRow">
+          <p class="InstructionObject">туман</p>
+          <p class="InstructionAction">
+            drag <img src="images/arrow.svg" alt="" />
+          </p>
+          <p class="InstructionResult">слышимость эха</p>
+        </div>
+
+        <div class="SoundToggle muted" id="soundToggle">
+          <div class="SoundTogglePlaque"></div>
+          <img
+            class="SoundToggleIcon mute"
+            src="images/sound-reduce.svg"
+            alt=""
+          />
+          <img
+            class="SoundToggleIcon unmute"
+            src="images/sound-max.svg"
+            alt=""
+          />
+        </div>
+      </div>
+    </main>
+
+    <nav class="Filters">
+      <button class="FilterButton" data-mode="day">день</button>
+      <button class="FilterButton" data-mode="evening">вечер</button>
+      <button class="FilterButton active" data-mode="night">ночь</button>
+    </nav>
+  </body>
+</html>

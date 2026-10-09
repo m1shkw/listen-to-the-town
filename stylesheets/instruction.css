@@ -1,0 +1,48 @@
+.Instruction {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 30px;
+  width: max-content;
+  padding: 30px 20px 20px;
+  font-weight: 400;
+  border-radius: 0 0 30px 30px;
+  background-color: var(--dark);
+}
+
+.InstructionRow {
+  display: flex;
+  align-items: center;
+  height: 13px;
+  font-size: 10px;
+}
+
+.InstructionRow + .InstructionRow {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--light-half);
+  box-sizing: content-box;
+}
+
+.InstructionObject {
+  width: 46px;
+  margin-right: 10px;
+}
+
+.InstructionAction {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  width: 46px;
+  margin-right: 40px;
+  color: var(--light-half);
+}
+
+.InstructionAction img {
+  width: 13px;
+  height: 13px;
+}
+
+.InstructionResult {
+  white-space: nowrap;
+}

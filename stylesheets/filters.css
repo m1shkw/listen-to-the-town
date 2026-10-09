@@ -1,0 +1,27 @@
+.Filters {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  height: 74px;
+  padding: 20px 70px;
+  box-sizing: border-box;
+  background-color: var(--darkest);
+}
+
+.FilterButton {
+  width: 200px;
+  padding: 7px 20px;
+  border: 1px solid var(--light-half);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--light-half);
+  font-size: 15px;
+}
+
+.FilterButton.active {
+  border-color: var(--light);
+  background-color: var(--light);
+  color: var(--darkest);
+}
