@@ -1,6 +1,6 @@
 # Listen to the town
 
-Веб-синтезатор на Tone.js. Арт-практика, ДиП ВШЭ, 2 курс, модуль 1.
+Веб-синтезатор на Tone.js. Арт-практика, дизпрог ВШЭ, 2 курс, модуль 1
 
 Ночной город, который можно слушать и играть на нем !
 
@@ -18,15 +18,17 @@
 
 ## Устройство звука
 
-В инструменте пять голосов. Цепочки перечислены по порядку, каждая заканчивается своим каналом (Channel)
+В инструменте пять голосов. Цепочки перечислены по порядку, каждая заканчивается своим каналом
 
-- окна: PolySynth (FMSynth), Chorus, FeedbackDelay, Filter, Reverb
-- капли: Synth, FeedbackDelay, Reverb
-- луна: PolySynth (fattriangle), Filter, Reverb
-- город: Noise, AutoFilter
-- ритм: MembraneSynth, Filter
+```
+окна     PolySynth (FMSynth), Chorus, FeedbackDelay, Filter, Reverb
+капли    Synth, FeedbackDelay, Reverb
+луна     PolySynth (fattriangle), Filter, Reverb
+город    Noise, AutoFilter
+ритм     MembraneSynth, Filter
+```
 
-16 колонок окон дают 16 шагов по восьмой, это 2 такта. Нота окна берётся из лада режима по высоте окна на экране
+16 колонок окон дают 16 шагов по восьмой, это 2 такта. Нота окна берется из лада режима по высоте окна на экране
 
 |  | день | вечер | ночь |
 | --- | --- | --- | --- |
