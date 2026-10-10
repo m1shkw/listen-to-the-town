@@ -65,9 +65,13 @@ const modes = {
       { house: 1, column: 1, row: 0 },
       { house: 1, column: 2, row: 4 },
       { house: 2, column: 1, row: 0 },
+      { house: 3, column: 0, row: 0 },
       { house: 3, column: 1, row: 1 },
       { house: 4, column: 0, row: 3 },
       { house: 4, column: 2, row: 1 },
+      { house: 5, column: 0, row: 1 },
+      { house: 5, column: 1, row: 0 },
+      { house: 6, column: 0, row: 2 },
       { house: 6, column: 1, row: 0 }
     ]
   },
@@ -93,13 +97,23 @@ const modes = {
     reverbWet: 0.35,
     rain: 0.3,
     lightWindows: [
+      { house: 0, column: 0, row: 0 },
       { house: 0, column: 0, row: 2 },
       { house: 1, column: 0, row: 3 },
-      { house: 1, column: 2, row: 1 },
+      { house: 1, column: 1, row: 1 },
+      { house: 1, column: 1, row: 4 },
+      { house: 2, column: 0, row: 1 },
+      { house: 2, column: 1, row: 0 },
       { house: 3, column: 0, row: 1 },
+      { house: 3, column: 1, row: 3 },
       { house: 4, column: 0, row: 2 },
-      { house: 4, column: 2, row: 1 },
-      { house: 6, column: 0, row: 2 }
+      { house: 4, column: 1, row: 1 },
+      { house: 4, column: 1, row: 4 },
+      { house: 4, column: 2, row: 3 },
+      { house: 5, column: 0, row: 1 },
+      { house: 5, column: 1, row: 0 },
+      { house: 6, column: 0, row: 2 },
+      { house: 6, column: 1, row: 0 }
     ]
   },
   night: {
@@ -253,7 +267,7 @@ const beatVoice = {
   sequence: { node: null }
 }
 
-let currentMode = 'night'
+let currentMode = 'day'
 let fogAmount = 0
 let moonHeight = 0.75
 let soundStarted = false
@@ -586,7 +600,8 @@ function dropFrom(x, y) {
 
   setTimeout(() => {
     playDrop(x)
-    drop.remove()
+    drop.classList.add('hidden')
+    setTimeout(() => drop.remove(), 400)
   }, duration)
 }
 
