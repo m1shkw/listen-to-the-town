@@ -15,7 +15,7 @@
     <script src="script.js"></script>
   </head>
 
-  <body>
+  <body class="day">
     <main class="Scene" id="scene">
       <div class="Sky" id="sky"></div>
       <div class="Moon" id="moon"></div>
@@ -56,24 +56,46 @@
 
         <div class="SoundToggle muted" id="soundToggle">
           <div class="SoundTogglePlaque"></div>
-          <img
+          <svg
             class="SoundToggleIcon mute"
-            src="images/sound-reduce.svg"
-            alt=""
-          />
-          <img
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M10 8H14M7.33 3.33V12.67L4.67 10H2.67C2.3 10 2 9.7 2 9.33V6.67C2 6.3 2.3 6 2.67 6H4.67L7.33 3.33Z"
+            />
+          </svg>
+          <svg
             class="SoundToggleIcon unmute"
-            src="images/sound-max.svg"
-            alt=""
-          />
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M7.33 3.33V12.67L4.67 10H2.67C2.3 10 2 9.7 2 9.33V6.67C2 6.3 2.3 6 2.67 6H4.67L7.33 3.33Z"
+            />
+            <path
+              d="M12.24 3.76C13.36 4.89 13.99 6.41 13.99 8C13.99 9.59 13.36 11.12 12.24 12.24"
+            />
+            <path
+              d="M10.36 5.64C10.98 6.26 11.34 7.11 11.34 8C11.34 8.89 10.98 9.74 10.36 10.36"
+            />
+          </svg>
         </div>
       </div>
     </main>
 
     <nav class="Filters">
-      <button class="FilterButton" data-mode="day">день</button>
+      <button class="FilterButton active" data-mode="day">день</button>
       <button class="FilterButton" data-mode="evening">вечер</button>
-      <button class="FilterButton active" data-mode="night">ночь</button>
+      <button class="FilterButton" data-mode="night">ночь</button>
     </nav>
   </body>
 </html>

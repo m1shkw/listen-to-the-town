@@ -6,8 +6,26 @@
   --light: #e6e8f1;
   --light-half: rgba(230, 232, 241, 0.5);
   --window-on: #ffd06a;
-  --window-playing: #fff3d1;
+  --window-playing: #f4eed6;
   --drop: #7ca2c2;
+  --moon: #f4eed6;
+  --panel: #121420;
+}
+
+body.day {
+  --sky: #82baff;
+  --house: #5976f8;
+  --window-on: #e6e8f1;
+  --window-playing: #8baeff;
+  --moon: #ffd06a;
+  --panel: #5976f8;
+  --drop: #f4eed6;
+}
+
+body.evening {
+  --sky: #7064df;
+  --house: #4448a9;
+  --drop: #a4c3dc;
 }
 
 html,
@@ -25,6 +43,7 @@ body {
   background-color: var(--sky);
   color: var(--light);
   user-select: none;
+  transition: background-color 1s;
 }
 
 button {

@@ -7,7 +7,8 @@
   padding: 30px 20px 20px;
   font-weight: 400;
   border-radius: 0 0 30px 30px;
-  background-color: var(--dark);
+  background-color: var(--panel);
+  transition: background-color 1s;
 }
 
 .InstructionRow {
@@ -21,7 +22,6 @@
   margin-top: 10px;
   padding-top: 10px;
   border-top: 1px solid var(--light-half);
-  box-sizing: content-box;
 }
 
 .InstructionObject {

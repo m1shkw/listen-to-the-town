@@ -305,12 +305,12 @@ function initWindowsVoice() {
   windowsVoice.sequence.node = new Tone.Sequence(
     (time, step) => {
       const notes = []
-      const lightWindows = []
+      const playingWindows = []
 
       steps[step].forEach((windowElement) => {
         if (windowElement.classList.contains('on')) {
           notes.push(windowNote(windowElement))
-          lightWindows.push(windowElement)
+          playingWindows.push(windowElement)
         }
       })
 
@@ -319,7 +319,7 @@ function initWindowsVoice() {
       windowsVoice.synth.node.triggerAttackRelease(notes, '8n', time)
 
       Tone.getDraw().schedule(() => {
-        lightWindows.forEach((windowElement) => flashWindow(windowElement))
+        playingWindows.forEach((windowElement) => flashWindow(windowElement))
       }, time)
     },
     stepNumbers,
@@ -418,7 +418,6 @@ function startSound() {
 
   changeMode(currentMode)
   changeMoonHeight(moonHeight)
-  changeFog(fogAmount)
 
   Tone.getTransport().start()
 }
@@ -426,6 +425,7 @@ function startSound() {
 function changeMode(mode) {
   const settings = modes[mode]
   currentMode = mode
+  document.body.className = mode
 
   document.querySelectorAll('.FilterButton').forEach((button) => {
     button.classList.toggle('active', button.dataset.mode === mode)
@@ -588,9 +588,8 @@ function dropFrom(x, y) {
 
   const distance = landing - y - 12
   const duration = (landing - y) * 4
-  const drop = document.createElement('img')
+  const drop = document.createElement('div')
 
-  drop.src = 'images/water-drop.svg'
   drop.classList.add('Drop')
   drop.style.left = `${x}px`
   drop.style.top = `${y}px`
