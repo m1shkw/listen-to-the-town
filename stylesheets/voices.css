@@ -1,0 +1,22 @@
+.Voices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 20px;
+}
+
+.VoiceButton {
+  padding: 4px 12px;
+  border: 1px solid var(--light-half);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--light-half);
+  font-size: 10px;
+  line-height: 13px;
+}
+
+.VoiceButton.active {
+  border-color: var(--light);
+  background-color: var(--light);
+  color: var(--voice-text);
+}

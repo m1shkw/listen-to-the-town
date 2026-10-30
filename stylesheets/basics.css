@@ -10,6 +10,7 @@
   --drop: #7ca2c2;
   --moon: #f4eed6;
   --panel: #121420;
+  --voice-text: #121420;
 }
 
 body.day {
@@ -20,6 +21,7 @@ body.day {
   --moon: #ffd06a;
   --panel: #5976f8;
   --drop: #f4eed6;
+  --voice-text: #1553ff;
 }
 
 body.evening {

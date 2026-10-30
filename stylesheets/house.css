@@ -32,3 +32,7 @@
 .Window.on.playing {
   background-color: var(--window-playing);
 }
+
+.City.dark .Window.on {
+  background-color: transparent;
+}

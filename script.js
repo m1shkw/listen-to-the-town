@@ -47,6 +47,7 @@ const modes = {
       'C1', null, null, null, 'C1', null, 'C1', null
     ],
     cityVolume: -14,
+    moonVolume: -36,
     windowsSynth: {
       harmonicity: 1,
       modulationIndex: 2,
@@ -84,6 +85,7 @@ const modes = {
       null, null, 'C1', null, null, null, null, null
     ],
     cityVolume: -24,
+    moonVolume: -36,
     windowsSynth: {
       harmonicity: 1,
       modulationIndex: 0.8,
@@ -125,6 +127,7 @@ const modes = {
       null, null, null, null, null, null, null, null
     ],
     cityVolume: -36,
+    moonVolume: -28,
     windowsSynth: {
       harmonicity: 3,
       modulationIndex: 5,
@@ -220,7 +223,7 @@ const moonVoice = {
     node: null
   },
   channel: {
-    settings: { volume: -18, pan: 0 },
+    settings: { volume: 0, pan: 0 },
     node: null
   },
   sequence: { node: null }
@@ -228,7 +231,7 @@ const moonVoice = {
 
 const cityVoice = {
   noise: {
-    settings: { type: 'brown', volume: -4 },
+    settings: { type: 'brown', volume: -36 },
     node: null
   },
   autoFilter: {
@@ -241,7 +244,7 @@ const cityVoice = {
     node: null
   },
   channel: {
-    settings: { volume: -36, pan: 0 },
+    settings: { volume: -4, pan: 0 },
     node: null
   }
 }
@@ -265,6 +268,14 @@ const beatVoice = {
     node: null
   },
   sequence: { node: null }
+}
+
+const voices = {
+  windows: windowsVoice,
+  drops: dropsVoice,
+  moon: moonVoice,
+  city: cityVoice,
+  beat: beatVoice
 }
 
 let currentMode = 'day'
@@ -304,6 +315,8 @@ function initWindowsVoice() {
 
   windowsVoice.sequence.node = new Tone.Sequence(
     (time, step) => {
+      if (!voiceOn('windows')) return
+
       const notes = []
       const playingWindows = []
 
@@ -417,7 +430,7 @@ function startSound() {
   soundStarted = true
 
   changeMode(currentMode)
-  changeMoonHeight(moonHeight)
+  muteVoices()
 
   Tone.getTransport().start()
 }
@@ -439,10 +452,11 @@ function changeMode(mode) {
   windowsVoice.delay.node.wet.rampTo(settings.delayWet, 1)
   moonVoice.sequence.node.events = settings.chords
   beatVoice.sequence.node.events = settings.beat
-  cityVoice.channel.node.volume.rampTo(settings.cityVolume, 2)
+  cityVoice.noise.node.volume.rampTo(settings.cityVolume, 2)
   dropsVoice.loop.node.probability = settings.rain
 
   changeFog(fogAmount)
+  changeMoonHeight(moonHeight)
 }
 
 function lightWindows(mode) {
@@ -480,12 +494,26 @@ function changeFog(amount) {
 }
 
 function changeMoonHeight(height) {
+  const settings = modes[currentMode]
   moonHeight = height
 
   if (!soundStarted) return
 
-  moonVoice.channel.node.volume.rampTo(-36 + 26 * height, 0.3)
+  moonVoice.synth.node.volume.rampTo(settings.moonVolume + 26 * height, 0.3)
   moonVoice.filter.node.frequency.rampTo(300 + 2700 * height, 0.3)
+}
+
+function muteVoices() {
+  if (!soundStarted) return
+
+  document.querySelectorAll('.VoiceButton').forEach((button) => {
+    const voice = voices[button.dataset.voice]
+    let volume = voice.channel.settings.volume
+
+    if (!button.classList.contains('active')) volume = -Infinity
+
+    voice.channel.node.volume.linearRampTo(volume, 0.5)
+  })
 }
 
 function windowNote(windowElement) {
@@ -560,6 +588,8 @@ function initHouses() {
     steps[windowElement.dataset.step].push(windowElement)
 
     windowElement.addEventListener('click', () => {
+      if (!voiceOn('windows')) return
+
       windowElement.classList.toggle('on')
 
       if (soundStarted && !paused && windowElement.classList.contains('on')) {
@@ -573,8 +603,13 @@ function initHouses() {
   })
 }
 
+function voiceOn(voice) {
+  const button = document.querySelector(`[data-voice="${voice}"]`)
+  return button.classList.contains('active')
+}
+
 function dropFrom(x, y) {
-  if (paused) return
+  if (paused || !voiceOn('drops')) return
 
   const scene = document.getElementById('scene')
   const offset = scene.offsetHeight - sceneSettings.height
@@ -626,7 +661,7 @@ function initSky() {
   const sky = document.getElementById('sky')
 
   sky.addEventListener('click', (e) => {
-    if (paused) return
+    if (paused || !voiceOn('drops')) return
 
     const x = e.offsetX
     const y = e.offsetY
@@ -706,6 +741,18 @@ function initFilters() {
   })
 }
 
+function initVoiceButtons() {
+  const city = document.getElementById('city')
+
+  document.querySelectorAll('.VoiceButton').forEach((button) => {
+    button.addEventListener('click', () => {
+      button.classList.toggle('active')
+      city.classList.toggle('dark', !voiceOn('windows'))
+      muteVoices()
+    })
+  })
+}
+
 function initSoundToggle() {
   const soundToggle = document.getElementById('soundToggle')
 
@@ -732,6 +779,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMoon()
   initFog()
   initFilters()
+  initVoiceButtons()
   initSoundToggle()
   lightWindows(currentMode)
   changeMode(currentMode)
