@@ -11,11 +11,15 @@
   transition: background-color 1s;
 }
 
+body[data-layout='mobile'] .Instruction {
+  left: 16px;
+}
+
 .InstructionRow {
   display: flex;
   align-items: center;
   height: 13px;
-  font-size: 10px;
+  font-size: 1rem;
 }
 
 .InstructionRow + .InstructionRow {

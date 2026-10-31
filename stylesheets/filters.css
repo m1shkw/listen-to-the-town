@@ -1,6 +1,9 @@
 .Filters {
-  position: relative;
+  position: absolute;
   z-index: 1;
+  left: 0;
+  bottom: 0;
+  width: calc(100% / var(--scale));
   display: flex;
   justify-content: center;
   gap: 10px;
@@ -8,6 +11,8 @@
   padding: 20px 70px;
   box-sizing: border-box;
   background-color: var(--darkest);
+  transform: scale(var(--scale));
+  transform-origin: bottom left;
 }
 
 .FilterButton {
@@ -17,11 +22,20 @@
   border-radius: 999px;
   background: transparent;
   color: var(--light-half);
-  font-size: 15px;
+  font-size: 1.5rem;
 }
 
 .FilterButton.active {
   border-color: var(--light);
   background-color: var(--light);
   color: var(--darkest);
+}
+
+body[data-layout='mobile'] .Filters {
+  gap: 8px;
+  padding: 20px 16px;
+}
+
+body[data-layout='mobile'] .FilterButton {
+  width: 114px;
 }

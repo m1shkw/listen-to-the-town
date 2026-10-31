@@ -1,7 +1,6 @@
 .House {
   position: absolute;
   display: grid;
-  width: 180px;
   height: 500px;
   box-sizing: border-box;
   border: 10px solid var(--dark);
@@ -22,6 +21,7 @@
 
 .Window {
   border: 5px solid var(--dark);
+  background-clip: padding-box;
   cursor: pointer;
 }
 

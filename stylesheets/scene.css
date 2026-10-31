@@ -1,8 +1,10 @@
 .Scene {
-  position: relative;
-  flex: 1;
-  width: 1440px;
-  margin: 0 auto;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: calc(100% / var(--scale) - 74px);
+  transform: scale(var(--scale));
+  transform-origin: top center;
 }
 
 .Sky {
@@ -13,10 +15,8 @@
 
 .Moon {
   position: absolute;
-  left: 1070px;
-  width: 100px;
-  height: 100px;
   border-radius: 999px;
+  touch-action: none;
   background-color: var(--moon);
   cursor: grab;
   transition: background-color 1s;
@@ -73,8 +73,8 @@
 .Fog {
   position: absolute;
   left: 50%;
-  width: calc(100vw + 200px);
-  margin-left: calc(-50vw - 100px);
+  width: calc(100vw / var(--scale) + 200px);
+  margin-left: calc(-50vw / var(--scale) - 100px);
   bottom: 0;
   height: 100%;
   pointer-events: none;
@@ -101,6 +101,7 @@
   background-color: #ffffff;
   cursor: ns-resize;
   pointer-events: auto;
+  touch-action: none;
 }
 
 .FogController::before {
@@ -114,8 +115,12 @@
   top: 33px;
   left: 0;
   right: 0;
-  font-size: 15px;
+  font-size: 1.5rem;
   font-weight: 400;
   text-align: center;
   pointer-events: none;
+}
+
+body[data-layout='mobile'] .Title {
+  display: none;
 }

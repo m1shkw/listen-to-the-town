@@ -1,27 +1,60 @@
 const sceneSettings = {
-  width: 1440,
   height: 826,
-  houseWidth: 180,
   houseHeight: 500,
   houseBorder: 10,
   noteHeight: 60,
   moonTop: 60,
   moonBottom: 420,
-  moonSize: 100,
   fogMinHeight: 37,
   fogMaxHeight: 500,
-  rainTop: 60
+  rainTop: 60,
+  filtersHeight: 74
 }
 
-const houses = [
-  { type: 'big', x: 30, y: 460 },
-  { type: 'small', x: 230, y: 341 },
-  { type: 'big', x: 430, y: 591 },
-  { type: 'big', x: 630, y: 342 },
-  { type: 'small', x: 830, y: 471 },
-  { type: 'big', x: 1030, y: 591 },
-  { type: 'big', x: 1230, y: 342 }
-]
+const layouts = {
+  desktop: {
+    width: 1440,
+    minHeight: 900,
+    houseWidth: 180,
+    moonLeft: 1070,
+    moonSize: 100,
+    houses: [
+      { type: 'big', x: 30, y: 460 },
+      { type: 'small', x: 230, y: 341 },
+      { type: 'big', x: 430, y: 591 },
+      { type: 'big', x: 630, y: 342 },
+      { type: 'small', x: 830, y: 471 },
+      { type: 'big', x: 1030, y: 591 },
+      { type: 'big', x: 1230, y: 342 }
+    ]
+  },
+  tablet: {
+    width: 768,
+    minHeight: 900,
+    houseWidth: 163,
+    moonLeft: 560,
+    moonSize: 100,
+    houses: [
+      { type: 'big', x: 30, y: 461 },
+      { type: 'small', x: 212, y: 341 },
+      { type: 'big', x: 393, y: 591 },
+      { type: 'big', x: 574, y: 341 }
+    ]
+  },
+  mobile: {
+    stretch: true,
+    joined: true,
+    width: 390,
+    minHeight: 770,
+    moonLeft: 295,
+    moonSize: 70,
+    houses: [
+      { type: 'small', y: 413 },
+      { type: 'big', y: 497 },
+      { type: 'small', y: 363 }
+    ]
+  }
+}
 
 const houseTypes = {
   big: { columns: 2, rows: 4, rowHeight: 120 },
@@ -278,6 +311,10 @@ const voices = {
   beat: beatVoice
 }
 
+let layout = layouts.desktop
+let sceneScale = 1
+let sceneWidth = 1440
+let stretch = 1
 let currentMode = 'day'
 let fogAmount = 0
 let moonHeight = 0.75
@@ -356,7 +393,7 @@ function initDropsVoice() {
 
   dropsVoice.loop.node = new Tone.Loop((time) => {
     Tone.getDraw().schedule(() => {
-      dropFrom(Math.random() * sceneSettings.width, sceneSettings.rainTop)
+      dropFrom(Math.random() * sceneWidth, sceneSettings.rainTop)
     }, time)
   }, '8n').start(0)
 }
@@ -467,7 +504,15 @@ function lightWindows(mode) {
   })
 
   modes[mode].lightWindows.forEach((lightWindow) => {
-    const houseType = houseTypes[houses[lightWindow.house].type]
+    const house = layout.houses[lightWindow.house]
+
+    if (!house) return
+
+    const houseType = houseTypes[house.type]
+
+    if (lightWindow.column >= houseType.columns) return
+    if (lightWindow.row >= houseType.rows) return
+
     const houseElement = houseElements[lightWindow.house]
     const index = lightWindow.row * houseType.columns + lightWindow.column
 
@@ -535,7 +580,7 @@ function playDrop(x) {
   if (!soundStarted || paused) return
 
   const scale = modes[currentMode].scale
-  let index = Math.floor((x / sceneSettings.width) * scale.length)
+  let index = Math.floor((x / sceneWidth) * scale.length)
 
   if (index < 0) index = 0
   if (index > scale.length - 1) index = scale.length - 1
@@ -548,13 +593,12 @@ function initHouses() {
   const city = document.getElementById('city')
   let step = 0
 
-  houses.forEach((house) => {
+  layout.houses.forEach((house) => {
     const houseType = houseTypes[house.type]
     const houseElement = document.createElement('div')
     const bottom = sceneSettings.height - house.y - sceneSettings.houseHeight
 
     houseElement.classList.add('House', house.type)
-    houseElement.style.left = `${house.x}px`
     houseElement.style.bottom = `${bottom}px`
 
     for (let row = 0; row < houseType.rows; row++) {
@@ -579,6 +623,8 @@ function initHouses() {
     step += houseType.columns
     city.appendChild(houseElement)
   })
+
+  placeHouses()
 
   for (let i = 0; i < step; i++) {
     steps.push([])
@@ -608,6 +654,29 @@ function voiceOn(voice) {
   return button.classList.contains('active')
 }
 
+function houseWidth() {
+  const count = layout.houses.length
+
+  if (layout.joined) {
+    return (sceneWidth + sceneSettings.houseBorder * (count - 1)) / count
+  }
+
+  return layout.houseWidth * stretch
+}
+
+function houseLeft(index) {
+  if (layout.joined) return index * (houseWidth() - sceneSettings.houseBorder)
+
+  return layout.houses[index].x * stretch
+}
+
+function placeHouses() {
+  document.querySelectorAll('.House').forEach((houseElement, index) => {
+    houseElement.style.left = `${houseLeft(index)}px`
+    houseElement.style.width = `${houseWidth()}px`
+  })
+}
+
 function dropFrom(x, y) {
   if (paused || !voiceOn('drops')) return
 
@@ -615,8 +684,10 @@ function dropFrom(x, y) {
   const offset = scene.offsetHeight - sceneSettings.height
   let landing = scene.offsetHeight
 
-  houses.forEach((house) => {
-    if (x >= house.x && x <= house.x + sceneSettings.houseWidth) {
+  layout.houses.forEach((house, index) => {
+    const left = houseLeft(index)
+
+    if (x >= left && x <= left + houseWidth()) {
       landing = house.y + offset
     }
   })
@@ -663,8 +734,9 @@ function initSky() {
   sky.addEventListener('click', (e) => {
     if (paused || !voiceOn('drops')) return
 
-    const x = e.offsetX
-    const y = e.offsetY
+    const skyRect = sky.getBoundingClientRect()
+    const x = (e.clientX - skyRect.left) / sceneScale
+    const y = (e.clientY - skyRect.top) / sceneScale
 
     showRipple(x, y)
     dropFrom(x, y)
@@ -676,17 +748,19 @@ function initMoon() {
   const scene = document.getElementById('scene')
   const range = sceneSettings.moonBottom - sceneSettings.moonTop
 
+  moon.style.width = `${layout.moonSize}px`
+  moon.style.height = `${layout.moonSize}px`
   moon.style.top = `${sceneSettings.moonBottom - moonHeight * range}px`
 
-  moon.addEventListener('mousedown', () => {
+  moon.addEventListener('pointerdown', () => {
     draggingMoon = true
   })
 
-  document.addEventListener('mousemove', (e) => {
+  document.addEventListener('pointermove', (e) => {
     if (!draggingMoon) return
 
     const sceneTop = scene.getBoundingClientRect().top
-    let top = e.clientY - sceneTop - sceneSettings.moonSize / 2
+    let top = (e.clientY - sceneTop) / sceneScale - layout.moonSize / 2
 
     if (top < sceneSettings.moonTop) top = sceneSettings.moonTop
     if (top > sceneSettings.moonBottom) top = sceneSettings.moonBottom
@@ -695,7 +769,7 @@ function initMoon() {
     changeMoonHeight((sceneSettings.moonBottom - top) / range)
   })
 
-  document.addEventListener('mouseup', () => {
+  document.addEventListener('pointerup', () => {
     draggingMoon = false
   })
 }
@@ -706,15 +780,15 @@ function initFog() {
   const scene = document.getElementById('scene')
   const range = sceneSettings.fogMaxHeight - sceneSettings.fogMinHeight
 
-  fogController.addEventListener('mousedown', () => {
+  fogController.addEventListener('pointerdown', () => {
     draggingFog = true
   })
 
-  document.addEventListener('mousemove', (e) => {
+  document.addEventListener('pointermove', (e) => {
     if (!draggingFog) return
 
     const sceneBottom = scene.getBoundingClientRect().bottom
-    let height = sceneBottom - e.clientY
+    let height = (sceneBottom - e.clientY) / sceneScale
 
     if (height < sceneSettings.fogMinHeight) height = sceneSettings.fogMinHeight
     if (height > sceneSettings.fogMaxHeight) height = sceneSettings.fogMaxHeight
@@ -727,9 +801,45 @@ function initFog() {
     changeFog(amount)
   })
 
-  document.addEventListener('mouseup', () => {
+  document.addEventListener('pointerup', () => {
     draggingFog = false
   })
+}
+
+function chooseLayout() {
+  if (window.innerWidth <= 600) return 'mobile'
+  if (window.innerWidth <= 1024) return 'tablet'
+  return 'desktop'
+}
+
+function resizeScene() {
+  const scene = document.getElementById('scene')
+  const moon = document.getElementById('moon')
+  const widthScale = window.innerWidth / layout.width
+  const heightScale =
+    window.innerHeight / (layout.minHeight + sceneSettings.filtersHeight)
+
+  sceneScale = Math.min(widthScale, heightScale)
+  sceneWidth = layout.width
+
+  if (layout.stretch) sceneWidth = window.innerWidth / sceneScale
+
+  stretch = sceneWidth / layout.width
+  scene.style.width = `${sceneWidth}px`
+  scene.style.marginLeft = `${-sceneWidth / 2}px`
+  moon.style.left = `${layout.moonLeft * stretch}px`
+  document.documentElement.style.setProperty('--scale', sceneScale)
+  placeHouses()
+}
+
+function initScene() {
+  const layoutName = chooseLayout()
+
+  layout = layouts[layoutName]
+  document.body.dataset.layout = layoutName
+
+  resizeScene()
+  window.addEventListener('resize', resizeScene)
 }
 
 function initFilters() {
@@ -774,6 +884,7 @@ function initSoundToggle() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  initScene()
   initHouses()
   initSky()
   initMoon()

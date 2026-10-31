@@ -11,6 +11,7 @@
   --moon: #f4eed6;
   --panel: #121420;
   --voice-text: #121420;
+  --scale: 1;
 }
 
 body.day {
@@ -30,14 +31,13 @@ body.evening {
   --drop: #a4c3dc;
 }
 
-html,
-body {
-  height: 100%;
+html {
+  font-size: 10px;
 }
 
 body {
-  display: flex;
-  flex-direction: column;
+  position: fixed;
+  inset: 0;
   overflow: hidden;
   font-family: 'Roboto Mono', monospace;
   font-weight: 500;
